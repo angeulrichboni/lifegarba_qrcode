@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# QR Validation App
 
-## Getting Started
+Application Next.js + Tailwind + Supabase pour valider des codes uniques via lien QR.
 
-First, run the development server:
+## Démarrage local
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Créez un fichier `.env.local` à la racine avec:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=... # URL du projet Supabase
+SUPABASE_SERVICE_ROLE_KEY=... # clé service_role (serveur uniquement)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Installez et lancez:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Ouvrez http://localhost:3000
 
-## Learn More
+## Table Supabase
 
-To learn more about Next.js, take a look at the following resources:
+```
+CREATE TABLE IF NOT EXISTS codes (
+	id SERIAL PRIMARY KEY,
+	code TEXT UNIQUE NOT NULL,
+	is_valid BOOLEAN DEFAULT TRUE,
+	last_scanned_at TIMESTAMP NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS codes_code_key ON codes(code);
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Flux
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/scan/<CODE>` redirige vers `/verify?code=<CODE>`.
+- `/verify` lit `code` (query), appelle `/api/verify`.
+- `/api/verify` effectue un `UPDATE ... WHERE is_valid=TRUE RETURNING *` puis fallback `SELECT`.
 
-## Deploy on Vercel
+## Déploiement (Vercel)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Définir les variables d'environnement dans le projet Vercel:
+	- `NEXT_PUBLIC_SUPABASE_URL`
+	- `SUPABASE_SERVICE_ROLE_KEY`
+- Déployer en pushant sur le repo.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tests (suggestion)
+
+- Tests de la route `/api/verify` pour les statuts `accepted`, `used`, `invalid` et concurrence.
