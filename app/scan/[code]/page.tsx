@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 
-type Props = { params: { code: string } };
-
-export default function ScanRedirect({ params }: Props) {
-  const code = decodeURIComponent(params.code);
-  redirect(`/verify?code=${encodeURIComponent(code)}`);
+export default async function ScanRedirect({ params }: { params: Promise<{ code: string }> }) {
+  const { code } = await params;
+  const decoded = decodeURIComponent(code);
+  redirect(`/verify?code=${encodeURIComponent(decoded)}`);
 }

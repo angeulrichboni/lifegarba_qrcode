@@ -7,7 +7,7 @@ export default function Home() {
 
         <div className="mt-8 grid gap-3">
           <a
-            href="/verify"
+            href="/scan-qr"
             className="rounded-lg bg-zinc-900 text-white px-4 py-3 text-center hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400"
           >
             Vérifier un code
