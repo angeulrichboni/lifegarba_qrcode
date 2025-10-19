@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { StatusCard } from "@/components/StatusCard";
 
@@ -17,19 +17,29 @@ export default function VerifyClient() {
     | { kind: "error" }
   >({ kind: "idle" });
 
+  const secFromUrl = useMemo(() => (search.get("sec") || "").trim(), [search]);
+
   useEffect(() => {
     if (!code) {
       setState({ kind: "invalid", code: "" });
       return;
     }
+    const sec = secFromUrl;
+    if (!sec) {
+      setState({ kind: "error" });
+      return;
+    }
+
     setState({ kind: "loading" });
     const controller = new AbortController();
-    fetch(`/api/verify?code=${encodeURIComponent(code)}`, {
+    fetch(`/api/verify?code=${encodeURIComponent(code)}&sec=${encodeURIComponent(sec)}`, {
       method: "GET",
       signal: controller.signal,
       cache: "no-store",
+      headers: { "x-security-code": sec },
     })
       .then(async (res) => {
+        if (res.status === 403) throw new Error("unauthorized");
         if (!res.ok) throw new Error("bad_response");
         return res.json();
       })
@@ -45,7 +55,7 @@ export default function VerifyClient() {
       .catch(() => setState({ kind: "error" }));
 
     return () => controller.abort();
-  }, [code]);
+  }, [code, secFromUrl]);
 
   const onBack = () => router.push("/");
 
@@ -53,7 +63,22 @@ export default function VerifyClient() {
     return <StatusCard status="loading" code={code} onBack={onBack} />;
   }
   if (state.kind === "error") {
-    return <StatusCard status="error" code={code} onBack={onBack} />;
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center p-4">
+        <div className="w-full max-w-sm rounded-2xl border bg-white p-6 shadow-lg">
+          <h2 className="text-lg font-semibold">Autorisation requise</h2>
+          <p className="mt-2 text-sm text-zinc-600">Veuillez ouvrir le scanner et saisir le code de sécurité.</p>
+          <div className="mt-4">
+            <button
+              onClick={() => router.push("/scan-qr")}
+              className="w-full rounded-lg bg-zinc-900 px-4 py-2 text-white hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400"
+            >
+              Ouvrir le scanner
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
   if (state.kind === "accepted") {
     return (
