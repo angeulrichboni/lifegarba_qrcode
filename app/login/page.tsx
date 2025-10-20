@@ -50,13 +50,22 @@ export default function LoginPage() {
             className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-zinc-400"
           />
           {error && <p className="text-sm text-rose-600">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-zinc-900 px-4 py-2 text-white hover:bg-zinc-800 disabled:opacity-50"
-          >
-            {loading ? "Vérification…" : "Se connecter"}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="flex-1 rounded-lg border px-4 py-2 hover:bg-zinc-50"
+            >
+              Accueil
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 rounded-lg bg-zinc-900 px-4 py-2 text-white hover:bg-zinc-800 disabled:opacity-50"
+            >
+              {loading ? "Vérification…" : "Se connecter"}
+            </button>
+          </div>
         </form>
       </div>
     </main>

@@ -63,15 +63,24 @@ export default function ManualPage() {
       <div className="mx-auto w-full max-w-md">
         <header className="flex items-center justify-between py-2">
           <h1 className="text-lg font-medium">Validation manuelle de ticket</h1>
-          <button
-            onClick={() => {
-              sessionStorage.removeItem("qrv:sec");
-              router.replace("/login");
-            }}
-            className="rounded-lg border px-3 py-2 text-sm hover:bg-zinc-50"
-          >
-            Déconnexion
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="rounded-lg border px-3 py-2 text-sm hover:bg-zinc-50"
+            >
+              Accueil
+            </button>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem("qrv:sec");
+                router.replace("/login");
+              }}
+              className="rounded-lg border px-3 py-2 text-sm hover:bg-zinc-50"
+            >
+              Déconnexion
+            </button>
+          </div>
         </header>
 
         <form onSubmit={submit} className="mt-4 grid gap-4 rounded-2xl border bg-white p-4 shadow-sm">
