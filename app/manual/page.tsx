@@ -30,8 +30,8 @@ export default function ManualPage() {
     return `LG-${color}-${padded}`;
   }, [color, num]);
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setSubmitting(true);
     setResult(null);
     try {
@@ -51,7 +51,7 @@ export default function ManualPage() {
       }
       const json = await res.json();
       setResult(json);
-    } catch (e) {
+    } catch {
       setResult({ error: "Erreur réseau, réessayez." });
     } finally {
       setSubmitting(false);

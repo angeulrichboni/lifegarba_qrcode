@@ -15,10 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "LifeGarba — Ticket Validation",
   description: "Application de validation de tickets (LG) — saisie et vérification sécurisée",
-  icons: 
-    {
-      icon: "/favicon.ico",
-    } as any,
 };
 
 export default function RootLayout({

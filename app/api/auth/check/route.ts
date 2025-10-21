@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "unauthorized" }, { status: 403 });
     }
     return NextResponse.json({ ok: true }, { status: 200 });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: "internal_error" }, { status: 500 });
   }
 }

@@ -77,7 +77,7 @@ export function StatusCard(props: {
             Dernier scan: {new Date(last_scanned_at).toLocaleString()}
           </p>
         ) : null}
-        {/* {onBack ? (
+        {onBack ? (
           <div className="mt-6">
             <button
               onClick={onBack}
@@ -86,7 +86,7 @@ export function StatusCard(props: {
               Scanner un autre code
             </button>
           </div>
-        ) : null} */}
+        ) : null}
       </motion.div>
     </div>
   );
